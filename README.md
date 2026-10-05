@@ -1,1 +1,6 @@
-# Full_Componenets_back-end
+# Full Componenets back-end
+---
+## Equipo de trabajo:
+- Vicente Chávez
+- Benjamín Figueroa
+- Felipe Martinez
