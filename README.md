@@ -19,3 +19,7 @@ MICROSERVICIO DESPACHO:
 
 Microservicio Usuarios y login:
 <img width="674" height="317" alt="Captura de pantalla 2026-10-14 192533" src="https://github.com/user-attachments/assets/850cceed-5630-4c52-888b-8a8a614fc14c" />
+
+Microservicio Carrito:
+<img width="513" height="173" alt="image" src="https://github.com/user-attachments/assets/29949f4b-84ad-442a-9015-e82ca9d1811d" />
+
