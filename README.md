@@ -23,3 +23,7 @@ Microservicio Usuarios y login:
 Microservicio Carrito:
 <img width="513" height="173" alt="image" src="https://github.com/user-attachments/assets/29949f4b-84ad-442a-9015-e82ca9d1811d" />
 
+Microservicio pedido:
+<img width="411" height="446" alt="Captura de pantalla 2026-10-15 125443" src="https://github.com/user-attachments/assets/54ac70f7-2a85-44cc-bf5c-c40a93e52661" />
+
+
