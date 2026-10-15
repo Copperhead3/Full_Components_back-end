@@ -30,7 +30,7 @@ class PagoFlujoTest {
     ReembolsoService reembolsoService;
 
     private PagoResponse nuevoPago(String monto) {
-        return pagoService.crear(new PagoRequest(new BigDecimal(monto), "clp", MetodoPago.TARJETA_CREDITO));
+        return pagoService.crear(new PagoRequest(1L, new BigDecimal(monto), "clp", MetodoPago.TARJETA_CREDITO));
     }
 
     @Test

@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 public class DespachoResponseDTO {
 
     private Long idDespacho;
+    private Long idPedido;
     private LocalDateTime fechaCreacion;
     private ModalidadEntregaDTO modalidad;
     private String estado;
@@ -24,6 +25,9 @@ public class DespachoResponseDTO {
     public void setIdDespacho(Long idDespacho) {
         this.idDespacho = idDespacho;
     }
+
+    public Long getIdPedido() { return idPedido; }
+    public void setIdPedido(Long idPedido) { this.idPedido = idPedido; }
 
     public LocalDateTime getFechaCreacion() {
         return fechaCreacion;

@@ -9,6 +9,9 @@ import java.math.BigDecimal;
 
 public class PagoRequestDTO {
 
+    @NotNull(message = "El ID del pedido es obligatorio")
+    private Long idPedido;
+
     @NotNull(message = "El monto es obligatorio")
     @DecimalMin(
         value = "0.01",
@@ -30,14 +33,19 @@ public class PagoRequestDTO {
     }
 
     public PagoRequestDTO(
+            Long idPedido,
             BigDecimal monto,
             String moneda,
             MetodoPagoDTO metodo) {
 
+        this.idPedido = idPedido;
         this.monto = monto;
         this.moneda = moneda;
         this.metodo = metodo;
     }
+
+    public Long getIdPedido() { return idPedido; }
+    public void setIdPedido(Long idPedido) { this.idPedido = idPedido; }
 
     public BigDecimal getMonto() {
         return monto;

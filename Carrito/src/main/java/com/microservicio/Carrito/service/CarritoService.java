@@ -4,6 +4,9 @@ import com.microservicio.Carrito.dto.ActualizarCantidadDTO;
 import com.microservicio.Carrito.dto.AgregarItemDTO;
 import com.microservicio.Carrito.dto.CarritoDTO;
 import com.microservicio.Carrito.dto.ItemCarritoDTO;
+import com.microservicio.Carrito.dto.integracion.ProductoResponseDTO;
+import com.microservicio.Carrito.client.ProductoClient;
+import com.microservicio.Carrito.client.InventarioClient;
 import com.microservicio.Carrito.model.Carrito;
 import com.microservicio.Carrito.model.ItemCarrito;
 import com.microservicio.Carrito.repository.CarritoRepository;
@@ -22,13 +25,19 @@ public class CarritoService {
 
         private final CarritoRepository carritoRepository;
         private final ItemCarritoRepository itemCarritoRepository;
+        private final ProductoClient productoClient;
+        private final InventarioClient inventarioClient;
 
         public CarritoService(
                         CarritoRepository carritoRepository,
-                        ItemCarritoRepository itemCarritoRepository) {
+                        ItemCarritoRepository itemCarritoRepository,
+                        ProductoClient productoClient,
+                        InventarioClient inventarioClient) {
 
                 this.carritoRepository = carritoRepository;
                 this.itemCarritoRepository = itemCarritoRepository;
+                this.productoClient = productoClient;
+                this.inventarioClient = inventarioClient;
         }
 
         // =========================================================
@@ -83,15 +92,10 @@ public class CarritoService {
                                         "La cantidad debe ser mayor o igual a 1");
                 }
 
-                /*
-                 * PENDIENTE INTEGRACIÓN:
-                 *
-                 * 1. Consultar Producto Service.
-                 * 2. Comprobar que el producto exista.
-                 * 3. Obtener precio actual.
-                 * 4. Consultar Inventario Service.
-                 * 5. Validar stock disponible.
-                 */
+                ProductoResponseDTO producto = productoClient.obtenerProducto(idProducto);
+                if (producto == null || producto.getPrecioVigente() == null) {
+                        throw new RuntimeException("Producto no encontrado o sin precio vigente");
+                }
 
                 Optional<ItemCarrito> itemExistente = itemCarritoRepository
                                 .findByCarritoIdCarritoAndIdProducto(
@@ -104,11 +108,8 @@ public class CarritoService {
 
                         int nuevaCantidad = item.getCantidad() + cantidad;
 
-                        /*
-                         * PENDIENTE:
-                         * Validar nuevaCantidad contra Inventario.
-                         */
-
+                        validarStock(idProducto, nuevaCantidad);
+                        item.setPrecioUnitario(producto.getPrecioVigente());
                         item.actualizarCantidad(nuevaCantidad);
 
                         itemCarritoRepository.save(item);
@@ -120,13 +121,8 @@ public class CarritoService {
                         nuevoItem.setIdProducto(idProducto);
                         nuevoItem.setCantidad(cantidad);
 
-                        /*
-                         * TEMPORAL.
-                         *
-                         * Cuando conectemos Producto Service,
-                         * este valor vendrá del precio real del producto.
-                         */
-                        nuevoItem.setPrecioUnitario(BigDecimal.ZERO);
+                        validarStock(idProducto, cantidad);
+                        nuevoItem.setPrecioUnitario(producto.getPrecioVigente());
 
                         carrito.agregarItem(nuevoItem);
 
@@ -163,13 +159,7 @@ public class CarritoService {
                                 .orElseThrow(() -> new RuntimeException(
                                                 "El producto no se encuentra en el carrito"));
 
-                /*
-                 * PENDIENTE:
-                 * consultar Inventario Service y comprobar:
-                 *
-                 * nuevaCantidad <= stockDisponible
-                 */
-
+                validarStock(idProducto, nuevaCantidad);
                 item.actualizarCantidad(nuevaCantidad);
 
                 itemCarritoRepository.save(item);
@@ -229,17 +219,14 @@ public class CarritoService {
 
                 Carrito carrito = buscarCarrito(idCliente);
 
-                /*
-                 * PENDIENTE INTEGRACIÓN CON PRODUCTO SERVICE
-                 *
-                 * Para cada item:
-                 *
-                 * 1. Consultar precio actual.
-                 * 2. Compararlo con precioUnitario.
-                 * 3. Detectar cambios.
-                 * 4. Actualizar precio si corresponde.
-                 */
-
+                for (ItemCarrito item : carrito.getItems()) {
+                        ProductoResponseDTO producto = productoClient.obtenerProducto(item.getIdProducto());
+                        if (producto == null || producto.getPrecioVigente() == null) {
+                                throw new RuntimeException("No fue posible validar el producto " + item.getIdProducto());
+                        }
+                        item.setPrecioUnitario(producto.getPrecioVigente());
+                }
+                carritoRepository.save(carrito);
                 return convertirACarritoDTO(carrito);
         }
 
@@ -257,13 +244,15 @@ public class CarritoService {
                         return false;
                 }
 
-                /*
-                 * PENDIENTE:
-                 *
-                 * - validar precios con Producto Service.
-                 * - validar stock con Inventario Service.
-                 */
-
+                for (ItemCarrito item : carrito.getItems()) {
+                        ProductoResponseDTO producto = productoClient.obtenerProducto(item.getIdProducto());
+                        if (producto == null || producto.getPrecioVigente() == null) return false;
+                        try {
+                                validarStock(item.getIdProducto(), item.getCantidad());
+                        } catch (RuntimeException e) {
+                                return false;
+                        }
+                }
                 return true;
         }
 
@@ -287,8 +276,7 @@ public class CarritoService {
                                         item.getIdItem(),
                                         item.getIdProducto(),
 
-                                        // Se obtendrá desde Producto Service.
-                                        null,
+                                        obtenerNombreProducto(item.getIdProducto()),
 
                                         item.getCantidad(),
                                         item.getPrecioUnitario(),
@@ -304,4 +292,17 @@ public class CarritoService {
                                 itemsDTO,
                                 carrito.calcularSubtotal());
         }
+
+        private void validarStock(Long idProducto, Integer cantidad) {
+                var respuesta = inventarioClient.validarDisponibilidad(idProducto, cantidad);
+                if (respuesta == null || !Boolean.TRUE.equals(respuesta.get("disponibleParaCompra"))) {
+                        throw new RuntimeException("Stock insuficiente para el producto " + idProducto);
+                }
+        }
+
+        private String obtenerNombreProducto(Long idProducto) {
+                ProductoResponseDTO producto = productoClient.obtenerProducto(idProducto);
+                return producto == null ? null : producto.getNombreProducto();
+        }
+
 }

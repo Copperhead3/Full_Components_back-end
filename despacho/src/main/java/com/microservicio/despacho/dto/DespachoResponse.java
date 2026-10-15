@@ -9,6 +9,7 @@ import com.microservicio.despacho.enums.ModalidadEntrega;
 
 public record DespachoResponse(
         Long idDespacho,
+        Long idPedido,
         LocalDateTime fechaCreacion,
         ModalidadEntrega modalidad,
         EstadoDespacho estado,
@@ -19,7 +20,7 @@ public record DespachoResponse(
         OperadorLogisticoResponse operador) {
 
     public static DespachoResponse from(Despacho d) {
-        return new DespachoResponse(d.getIdDespacho(), d.getFechaCreacion(), d.getModalidad(), d.getEstado(),
+        return new DespachoResponse(d.getIdDespacho(), d.getIdPedido(), d.getFechaCreacion(), d.getModalidad(), d.getEstado(),
                 d.getCosto(), d.getFechaEstimadaEntrega(), d.getNumeroSeguimiento(),
                 DireccionEntregaResponse.from(d.getDireccion()),
                 d.getOperador() == null ? null : OperadorLogisticoResponse.from(d.getOperador()));

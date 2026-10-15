@@ -68,7 +68,7 @@ public class DespachoService {
         }
 
         int dias = modalidad == ModalidadEntrega.DOMICILIO ? diasEstimadosDomicilio : diasEstimadosRetiro;
-        Despacho despacho = new Despacho(modalidad, direccion, generarNumeroSeguimiento(),
+        Despacho despacho = new Despacho(request.idPedido(), modalidad, direccion, generarNumeroSeguimiento(),
                 LocalDateTime.now().plusDays(dias));
         despacho.calcularCosto(tarifa);
         despacho.registrarSeguimiento("Despacho creado");

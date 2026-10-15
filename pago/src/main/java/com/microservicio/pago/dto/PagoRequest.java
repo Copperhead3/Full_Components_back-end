@@ -9,8 +9,13 @@ import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Positive;
 
 public record PagoRequest(
+        @NotNull(message = "El ID del pedido es obligatorio")
+        @Positive(message = "El ID del pedido debe ser mayor a 0")
+        Long idPedido,
+
         @NotNull(message = "El monto es obligatorio")
         @DecimalMin(value = "0.01", message = "El monto debe ser mayor a cero")
         @Digits(integer = 17, fraction = 2, message = "El monto admite hasta 2 decimales")

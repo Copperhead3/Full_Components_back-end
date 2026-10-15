@@ -193,7 +193,7 @@ public class PedidoService {
         try {
 
             DespachoResponseDTO despacho =
-                    crearDespacho(datos);
+                    crearDespacho(pedido.getIdPedido(), datos);
 
             validarRespuestaDespacho(despacho);
 
@@ -232,6 +232,7 @@ public class PedidoService {
 
             PagoRequestDTO pagoRequest =
                     new PagoRequestDTO(
+                            pedido.getIdPedido(),
                             pedido.getTotal(),
                             "CLP",
                             datos.getMetodoPago()
@@ -826,6 +827,7 @@ public class PedidoService {
     // =========================================================
 
     private DespachoResponseDTO crearDespacho(
+            Long idPedido,
             CrearPedidoDTO datos) {
 
         if (datos.getModalidadEntrega()
@@ -912,6 +914,7 @@ public class PedidoService {
 
         DespachoRequestDTO request =
                 new DespachoRequestDTO(
+                        idPedido,
                         datos.getModalidadEntrega(),
                         direccion
                 );

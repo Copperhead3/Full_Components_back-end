@@ -1,0 +1,74 @@
+server:
+  port: 8090
+
+spring:
+  application:
+    name: gateway
+  cloud:
+    gateway:
+      server:
+        webflux:
+          routes:
+            - id: usuarios
+              uri: http://localhost:8081
+              predicates:
+                - Path=/usuarios/**
+              filters:
+                - StripPrefix=1
+            - id: carrito
+              uri: http://localhost:8082
+              predicates:
+                - Path=/carrito/**
+              filters:
+                - StripPrefix=1
+            - id: producto
+              uri: http://localhost:8083
+              predicates:
+                - Path=/producto/**
+              filters:
+                - StripPrefix=1
+            - id: inventario
+              uri: http://localhost:8084
+              predicates:
+                - Path=/inventario/**
+              filters:
+                - StripPrefix=1
+            - id: despacho
+              uri: http://localhost:8085
+              predicates:
+                - Path=/despacho/**
+              filters:
+                - StripPrefix=1
+            - id: pedido
+              uri: http://localhost:8086
+              predicates:
+                - Path=/pedido/**
+              filters:
+                - StripPrefix=1
+            - id: pago
+              uri: http://localhost:8087
+              predicates:
+                - Path=/pago/**
+              filters:
+                - StripPrefix=1
+
+springdoc:
+  api-docs:
+    enabled: true
+  swagger-ui:
+    path: /swagger-ui.html
+    urls:
+      - name: Usuarios
+        url: /usuarios/v3/api-docs
+      - name: Carrito
+        url: /carrito/v3/api-docs
+      - name: Producto
+        url: /producto/v3/api-docs
+      - name: Inventario
+        url: /inventario/v3/api-docs
+      - name: Despacho
+        url: /despacho/v3/api-docs
+      - name: Pedido
+        url: /pedido/v3/api-docs
+      - name: Pago
+        url: /pago/v3/api-docs

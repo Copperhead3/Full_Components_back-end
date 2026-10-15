@@ -9,6 +9,7 @@ import com.microservicio.pago.enums.MetodoPago;
 
 public record PagoResponse(
         Long idPago,
+        Long idPedido,
         BigDecimal monto,
         String moneda,
         LocalDateTime fechaCreacion,
@@ -18,7 +19,7 @@ public record PagoResponse(
         BigDecimal montoDisponibleReembolso) {
 
     public static PagoResponse from(Pago p) {
-        return new PagoResponse(p.getIdPago(), p.getMonto(), p.getMoneda(), p.getFechaCreacion(),
+        return new PagoResponse(p.getIdPago(), p.getIdPedido(), p.getMonto(), p.getMoneda(), p.getFechaCreacion(),
                 p.getEstado(), p.getMetodo(), p.montoReembolsado(), p.montoDisponibleReembolso());
     }
 }

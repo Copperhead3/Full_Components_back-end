@@ -37,6 +37,9 @@ public class Pago {
     @Column(name = "id_pago")
     private Long idPago;
 
+    @Column(name = "id_pedido", nullable = false)
+    private Long idPedido;
+
     @Column(nullable = false, precision = 19, scale = 2)
     private BigDecimal monto;
 
@@ -64,7 +67,8 @@ public class Pago {
     @OrderBy("idReembolso ASC")
     private List<Reembolso> reembolsos = new ArrayList<>();
 
-    public Pago(BigDecimal monto, String moneda, MetodoPago metodo) {
+    public Pago(Long idPedido, BigDecimal monto, String moneda, MetodoPago metodo) {
+        this.idPedido = idPedido;
         this.monto = monto;
         this.moneda = moneda.toUpperCase();
         this.metodo = metodo;

@@ -5,6 +5,9 @@ import jakarta.validation.constraints.NotNull;
 
 public class DespachoRequestDTO {
 
+    @NotNull(message = "El ID del pedido es obligatorio")
+    private Long idPedido;
+
     @NotNull(message = "La modalidad de entrega es obligatoria")
     private ModalidadEntregaDTO modalidad;
 
@@ -15,12 +18,17 @@ public class DespachoRequestDTO {
     }
 
     public DespachoRequestDTO(
+            Long idPedido,
             ModalidadEntregaDTO modalidad,
             DireccionDespachoDTO direccion) {
 
+        this.idPedido = idPedido;
         this.modalidad = modalidad;
         this.direccion = direccion;
     }
+
+    public Long getIdPedido() { return idPedido; }
+    public void setIdPedido(Long idPedido) { this.idPedido = idPedido; }
 
     public ModalidadEntregaDTO getModalidad() {
         return modalidad;

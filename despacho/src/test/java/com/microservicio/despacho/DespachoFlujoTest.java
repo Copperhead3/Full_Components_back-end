@@ -49,7 +49,7 @@ class DespachoFlujoTest {
     }
 
     private DespachoRequest domicilio(String comuna) {
-        return new DespachoRequest(ModalidadEntrega.DOMICILIO,
+        return new DespachoRequest(1L, ModalidadEntrega.DOMICILIO,
                 new DireccionEntregaRequest("Biobio", comuna, "Barros Arana", "123", null, null));
     }
 
@@ -102,7 +102,7 @@ class DespachoFlujoTest {
 
     @Test
     void retiroEnTiendaNoTieneCostoNiRequiereOperador() {
-        DespachoResponse d = despachoService.crear(new DespachoRequest(ModalidadEntrega.RETIRO_EN_TIENDA, null));
+        DespachoResponse d = despachoService.crear(new DespachoRequest(1L, ModalidadEntrega.RETIRO_EN_TIENDA, null));
         assertEquals(0, BigDecimal.ZERO.compareTo(d.costo()));
         assertNull(d.direccion());
 

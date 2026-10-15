@@ -5,6 +5,8 @@ import org.springframework.context.annotation.Configuration;
 
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
+import io.swagger.v3.oas.models.servers.Server;
+import java.util.List;
 
 @Configuration
 public class SwaggerConfig {
@@ -18,6 +20,7 @@ public class SwaggerConfig {
                         .description(
                                 "API para gestionar productos, categorías, "
                                 + "imágenes y especificaciones del catálogo")
-                        .version("1.0"));
+                        .version("1.0"))
+                .servers(List.of(new Server().url("http://localhost:8090/producto").description("API Gateway")));
     }
 }

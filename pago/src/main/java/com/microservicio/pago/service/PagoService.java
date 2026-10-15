@@ -30,7 +30,7 @@ public class PagoService {
 
     @Transactional
     public PagoResponse crear(PagoRequest request) {
-        Pago pago = new Pago(request.monto(), request.moneda(), request.metodo());
+        Pago pago = new Pago(request.idPedido(), request.monto(), request.moneda(), request.metodo());
         return PagoResponse.from(pagoRepository.save(pago));
     }
 

@@ -40,6 +40,9 @@ public class Despacho {
     @Column(name = "id_despacho")
     private Long idDespacho;
 
+    @Column(name = "id_pedido", nullable = false)
+    private Long idPedido;
+
     @Column(name = "fecha_creacion", nullable = false, updatable = false)
     private LocalDateTime fechaCreacion;
 
@@ -73,8 +76,9 @@ public class Despacho {
     @OrderBy("idHistorial ASC")
     private List<HistorialEstadoDespacho> historial = new ArrayList<>();
 
-    public Despacho(ModalidadEntrega modalidad, DireccionEntrega direccion, String numeroSeguimiento,
+    public Despacho(Long idPedido, ModalidadEntrega modalidad, DireccionEntrega direccion, String numeroSeguimiento,
             LocalDateTime fechaEstimadaEntrega) {
+        this.idPedido = idPedido;
         this.modalidad = modalidad;
         this.direccion = direccion;
         this.numeroSeguimiento = numeroSeguimiento;

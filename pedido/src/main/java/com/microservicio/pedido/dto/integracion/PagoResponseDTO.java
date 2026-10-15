@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 public class PagoResponseDTO {
 
     private Long idPago;
+    private Long idPedido;
 
     private BigDecimal monto;
 
@@ -66,6 +67,9 @@ public class PagoResponseDTO {
     public void setIdPago(Long idPago) {
         this.idPago = idPago;
     }
+
+    public Long getIdPedido() { return idPedido; }
+    public void setIdPedido(Long idPedido) { this.idPedido = idPedido; }
 
     public BigDecimal getMonto() {
         return monto;
