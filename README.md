@@ -16,3 +16,6 @@ MICROSERVICIO PAGO:
 
 MICROSERVICIO DESPACHO:
 <img width="980" height="547" alt="diagrama despacho" src="https://github.com/user-attachments/assets/331f70c7-2da5-478b-8661-b5b27cbbe8ba" />
+
+Microservicio Usuarios y login:
+<img width="674" height="317" alt="Captura de pantalla 2026-10-14 192533" src="https://github.com/user-attachments/assets/850cceed-5630-4c52-888b-8a8a614fc14c" />
